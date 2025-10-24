@@ -1,5 +1,5 @@
 # Esempio plancia pompa di calore Templari
-# versione 1.1 by Daniele "Wergio" Vergini
+# versione 1.2 by Daniele "Wergio" Vergini
 #
 # prendere spunto da questa plancia per creare la propria
 # potete anche prendere solo i pezzi di codice che vi servono
@@ -130,6 +130,12 @@ views:
               - type: custom:template-entity-row
                 entity: sensor.templari_xx_errore_inverter_decodificato
                 name: Presenza Allarmi bloccanti
+                color: >-
+                  {% if
+                  (states('sensor.templari_xx_stato_inverter_decodificato') ==
+                  'In Allarme') or
+                  (states('sensor.templari_xx_errore_inverter_decodificato') !=
+                  'Nessuno') %}red{% else %}grey{% endif %}
                 state: >-
                   {% if
                   (states('sensor.templari_xx_stato_inverter_decodificato') ==
@@ -175,7 +181,7 @@ views:
                   name: /Warning/
                   state: 'on'
                 # decommentare questo pezzo se volete vedere anche i bit non documentati!
-                #- entity_id: binary_sensor.templari_p1_bit*
+                #- entity_id: binary_sensor.templari_xx_bit*
                 #  name: /[Uu]ndocumented/
                 #  state: "on"                     
               sort:
