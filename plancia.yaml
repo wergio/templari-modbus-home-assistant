@@ -1,0 +1,183 @@
+# Esempio plancia pompa di calore Templari
+# versione 1.1 by Daniele "Wergio" Vergini
+#
+# prendere spunto da questa plancia per creare la propria
+# potete anche prendere solo i pezzi di codice che vi servono
+# i commenti si perdono se copiate tutto nelle plance quindi
+# leggeteli prima.
+#
+# IMPORTANTE: per funzionare dovete avere prima caricato il
+# "templari_package.yaml", aver lanciato lo script "rename_bits.yaml"
+# e dovete sostituire con cerca/sostituisci "templari_xx" con 
+# il prefisso corretto delle vostre entità
+#
+# per funzionare serve avere installati i seguenti componenti 
+# aggiuntivi HACS:
+# - template-entity-row
+# - auto-entities
+
+views:
+  - type: sections
+    max_columns: 2
+    title: Pompa di Calore
+    path: pompa-di-calore
+    sections:
+      - type: grid
+        cards:
+          - type: entities
+            title: Pompa di Calore Templari
+            entities:
+              - type: custom:template-entity-row
+                entity: sensor.templari_xx_stato_macchina_decodificato
+                name: Stato Macchina
+                state: "{{ states('sensor.templari_xx_stato_macchina_decodificato') }}"
+                secondary: >-
+                  Modalità {{
+                  states('sensor.templari_xx_modalita_funzionamento_decodificato') }}
+              - type: custom:template-entity-row
+                entity: sensor.templari_xx_giri_compressore
+                name: Compressore
+                state: >-
+                  {% if states('sensor.templari_xx_giri_compressore') | int(0) == 0
+                  %}Spento{% else %}{{ states('sensor.templari_xx_giri_compressore') }} giri
+                  ({{ states('sensor.templari_xx_percentuale_compressore') | round }}%){%
+                  endif %}
+                secondary: >-
+                  Attesa per prossimo avvio: {% set s =
+                  states('sensor.templari_xx_conto_alla_rovescia_per_nuova_partenza') |
+                  int(0) %} {% if s == 0 %}
+                    nessuna
+                  {% elif s > 60 %}
+                    {{ (s / 60) | round }} minuti e {{ (s % 60) }} secondi
+                  {% else %}
+                    {{ s }} secondi
+                  {% endif %}
+              - type: custom:template-entity-row
+                entity: sensor.templari_xx_temperatura_acs_b3
+                name: Temperatura Acqua Calda Sanitaria
+                state: "{{ states('sensor.templari_xx_temperatura_acs_b3') }} °C"
+                secondary: >-
+                  SetPoint {% if states('sensor.templari_xx_modalita_funzionamento') in
+                  ['0','1','2'] %}{{
+                  states('sensor.templari_xx_temperatura_setpoint_acs_richiesti_da_supervisore')
+                  }} °C{% else %}assente{% endif %}
+                icon: >-
+                  {% if (states('sensor.templari_xx_giri_compressore') | int(0) != 0) and
+                  (states('binary_sensor.templari_xx_bit_18') == 'on')
+                  %}mdi:thermometer-chevron-up{% else %}mdi:thermometer{% endif %}
+                color: >-
+                  {% if (states('sensor.templari_xx_giri_compressore') | int(0) != 0) and
+                  (states('binary_sensor.templari_xx_bit_18') == 'on') %}red{% else
+                  %}var(--state-icon-color){% endif %}
+              - type: custom:template-entity-row
+                entity: sensor.templari_xx_temperatura_acqua_tecnica_b2
+                name: Temperatura Acqua Tecnica
+                state: "{{ states('sensor.templari_xx_temperatura_acqua_tecnica_b2') }} °C"
+                secondary: >-
+                  SetPoint {% if states('sensor.templari_xx_modalita_funzionamento') in
+                  ['2','4'] %}{{ states('sensor.templari_xx_temperatura_setpoint_chiller')
+                  }} °C{% elif states('sensor.templari_xx_modalita_funzionamento') in
+                  ['1','3'] %}{{
+                  states('sensor.templari_xx_temperatura_setpoint_heat_pump_richiesti_da_supervisore')
+                  }} °C{% else %}assente{% endif %}
+                icon: >-
+                  {% if (states('sensor.templari_xx_giri_compressore') | int(0) != 0) and
+                  (states('binary_sensor.templari_xx_bit_18') != 'on') %}{% if
+                  states('sensor.templari_xx_temperatura_setpoint_active') ==
+                  states('sensor.templari_xx_temperatura_setpoint_heat_pump_richiesti_da_supervisore')
+                  %}mdi:thermometer-chevron-up{% elif
+                  states('sensor.templari_xx_temperatura_setpoint_active') ==
+                  states('sensor.templari_xx_temperatura_setpoint_chiller')
+                  %}mdi:thermometer-chevron-down{% else %}mdi:thermometer{% endif %}{% else
+                  %}mdi:thermometer{% endif %}   
+                color: >-
+                  {% if (states('sensor.templari_xx_giri_compressore') | int(0) != 0) and
+                  (states('binary_sensor.templari_xx_bit_18') != 'on') %}{% if
+                  states('sensor.templari_xx_temperatura_setpoint_active') ==
+                  states('sensor.templari_xx_temperatura_setpoint_heat_pump_richiesti_da_supervisore')
+                  %}red{% elif states('sensor.templari_xx_temperatura_setpoint_active') ==
+                  states('sensor.templari_xx_temperatura_setpoint_chiller') %}blue{% else
+                  %}var(--state-icon-color){% endif %}{% else %}var(--state-icon-color){%
+                  endif %}
+              - entity: sensor.templari_xx_potenza_assorbita_totale
+                name: Potenza istantanea consumata
+              - entity: sensor.templari_xx_consumo_riemann_daily
+                name: Consumo Giornaliero
+              - entity: sensor.templari_xx_consumo_riemann_monthly
+                name: Consumo Mensile
+              - entity: sensor.templari_xx_consumo_riemann_yearly
+                name: Consumo Annuale
+      - type: grid
+        cards:
+          - type: entities
+            title: Parametri principali
+            entities:
+              - entity: sensor.templari_xx_cop
+                name: COP
+              - entity: sensor.templari_xx_temperatura_mandata_b7
+                name: Temperatura Mandata
+              - entity: sensor.templari_xx_temperatura_ritorno_b4
+                name: Temperatura Ritorno
+              - entity: sensor.templari_xx_portata_b5
+                name: Portata circuito primario
+              - entity: sensor.templari_xx_temperatura_testa_compressore_b6
+                name: Temperatura Testa Compressore
+          - type: custom:auto-entities
+            card:
+              type: entities
+              title: Allarmi
+            entities:
+              - type: custom:template-entity-row
+                entity: sensor.templari_xx_errore_inverter_decodificato
+                name: Presenza Allarmi bloccanti
+                state: >-
+                  {% if
+                  (states('sensor.templari_xx_stato_inverter_decodificato') ==
+                  'In Allarme') or
+                  (states('sensor.templari_xx_errore_inverter_decodificato') !=
+                  'Nessuno') %}Si{% else %}No{% endif %}
+                secondary: >-
+                  {% if states('sensor.templari_xx_stato_inverter_decodificato')
+                  == 'In Allarme' %}Inverter in Allarme{% endif %} {% if
+                  states('sensor.templari_xx_errore_inverter_decodificato') !=
+                  'Nessuno' %}{{
+                  states('sensor.templari_xx_errore_inverter_decodificato') }}{%
+                  endif %}
+            filter:
+              include:
+                - options: {}
+                  entity_id: binary_sensor.templari_xx_bit*
+                  state: 'on'
+              exclude:
+                - options: {}
+                  name: /Digital input/
+                - options: {}
+                  name: /Digital output/
+                - options: {}
+                  name: /Warning/
+                - options: {}
+                  name: /[Uu]ndocumented/
+              sort:
+                method: entity_id
+          - type: custom:auto-entities
+            card:
+              type: entities
+              title: Informazioni
+            filter:
+              include:
+                - entity_id: binary_sensor.templari_xx_bit*
+                  name: /Digital input/
+                  state: 'on'
+                - entity_id: binary_sensor.templari_xx_bit*
+                  name: /Digital output/
+                  state: 'on'
+                - entity_id: binary_sensor.templari_xx_bit*
+                  name: /Warning/
+                  state: 'on'
+                # decommentare questo pezzo se volete vedere anche i bit non documentati!
+                #- entity_id: binary_sensor.templari_p1_bit*
+                #  name: /[Uu]ndocumented/
+                #  state: "on"                     
+              sort:
+                method: entity_id
+

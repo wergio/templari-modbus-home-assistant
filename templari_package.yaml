@@ -1,0 +1,456 @@
+# Package Home Assistant per entità Templari Modbus/TCP
+# versione 1.1 by Daniele "Wergio" Vergini
+# testato con versione pannello 1.8.55
+#
+# questo file "templari_package.yaml" va copiato nella stessa directory
+# di configuration.yaml e incluso in esso con la seguente notazione:
+#
+# homeassistant:
+#   packages:
+#     templari: !include templari_package.yaml
+#
+# operazioni da fare manualmente:
+# - mettere l'ip privato corretto del vostro pannello in "host"
+# - fare trova sostituisci in tutto il file di "templari_xx" con quello che
+#   volete sia il prefisso dello unique_id delle vostre entità
+# - fare trova sostituisci in tutto il file di "Templari XX" con quello che
+#   volete sia il prefisso del nome delle vostre entità, da quello viene
+#   generato anche l'id dell'entità che sarà ad esempio "templari_xx" se
+#   lasciate com'è
+# - scorrete manualmente il file per commentare o de-commentare a seconda
+#   delle entità che vi servono
+# - fare riavvio completo di HA per rendere attive le entità modbus.
+#   se non risultano disponibili contattare Templari per capire come mai.
+#   alcuni hanno segnalato che la porta è 8010 invece di 8000 su alcuni pannelli
+# - lanciate una tantum lo script "rename_bits.yaml" fornito separatamente per
+#   dare i nomi corretti ai bit di allarme, basta creare un nuovo script
+#   da interfaccia, andare in modalità yaml e copiarci dentro il contenuto
+#   del file, seguire le istruzioni prima di eseguirlo
+# - prendere spunto da file "plancia.yaml" per come impostare la vostra
+#   plancia con le varie entità ottenute (vengono utilizzati vari custom
+#   components da prelevare con HACS)
+
+modbus:
+  - name: Modbus Pompa di Calore Templari
+    type: tcp
+    host: 192.168.1.155
+    port: 8000
+  
+    defaults_sensor: &defaults_sensor
+      scan_interval: 30
+      input_type: input
+      data_type: int16
+      scale: 0.1
+      precision: 1
+  
+    defaults_temperature_sensor: &defaults_temperature_sensor
+      <<: *defaults_sensor
+      device_class: temperature
+      unit_of_measurement: °C
+  
+    defaults_pressure_sensor: &defaults_pressure_sensor
+      <<: *defaults_sensor
+      device_class: pressure
+      unit_of_measurement: bar
+  
+    defaults_flow_sensor: &defaults_flow_sensor
+      <<: *defaults_sensor
+      device_class: volume_flow_rate
+      unit_of_measurement: L/min
+  
+    defaults_percentage_sensor: &defaults_percentage_sensor
+      <<: *defaults_sensor
+      unit_of_measurement: '%'
+  
+    defaults_rps_sensor: &defaults_rps_sensor
+      <<: *defaults_sensor
+      unit_of_measurement: giri
+  
+    defaults_bigpower_sensor: &defaults_bigpower_sensor
+      <<: *defaults_sensor
+      device_class: power
+      unit_of_measurement: kW
+      scale: 10
+      precision: 1
+  
+    defaults_smallpower_sensor: &defaults_smallpower_sensor
+      <<: *defaults_sensor
+      device_class: power
+      unit_of_measurement: W
+      scale: 1
+      precision: 0
+  
+    defaults_number_sensor: &defaults_number_sensor
+      <<: *defaults_sensor
+      scale: 1
+      precision: 0
+  
+    defaults_countdown_sensor: &defaults_countdown_sensor
+      <<: *defaults_sensor
+      unit_of_measurement: s
+      scale: 1
+      precision: 0
+  
+    defaults_frequency_sensor: &defaults_frequency_sensor
+      <<: *defaults_sensor
+      device_class: frequency
+      unit_of_measurement: Hz
+  
+    # lettura sequenziale di 120 parametri bit in modo efficiente
+    # usare lo script "rename_bits" per dargli dei nomi sensati
+    binary_sensors:
+      - unique_id: pdc_templari_xx_bit
+        name: Templari XX Bit
+        scan_interval: 30
+        input_type: discrete_input
+        address: 0
+        virtual_count: 119
+  
+    # sensori da input register 16bit
+    sensors:
+      - unique_id: pdc_templari_xx_B1_t_subcooling
+        name: Templari XX Temperatura Subcooling (B1)
+        address: 0
+        <<: *defaults_temperature_sensor
+  
+      - unique_id: pdc_templari_xx_B2_t_acqua_tecnica
+        name: Templari XX Temperatura Acqua Tecnica (B2)
+        address: 1
+        <<: *defaults_temperature_sensor
+  
+      - unique_id: pdc_templari_xx_B3_t_acs
+        name: Templari XX Temperatura ACS (B3)
+        address: 2
+        <<: *defaults_temperature_sensor
+  
+      - unique_id: pdc_templari_xx_B4_t_ritorno
+        name: Templari XX Temperatura Ritorno (B4)
+        address: 3
+        <<: *defaults_temperature_sensor
+  
+      - unique_id: pdc_templari_xx_B5_portata
+        name: Templari XX Portata (B5)
+        address: 4
+        <<: *defaults_flow_sensor
+  
+      - unique_id: pdc_templari_xx_B6_t_testa_compressore
+        name: Templari XX Temperatura Testa Compressore (B6)
+        address: 5
+        <<: *defaults_temperature_sensor
+  
+      - unique_id: pdc_templari_xx_B7_t_mandata
+        name: Templari XX Temperatura Mandata (B7)
+        address: 6
+        <<: *defaults_temperature_sensor
+  
+      - unique_id: pdc_templari_xx_B8_t_esterna
+        name: Templari XX Temperatura Esterna (B8)
+        address: 7
+        <<: *defaults_temperature_sensor
+  
+      - unique_id: pdc_templari_xx_B9_t_scarico
+        name: Templari XX Temperatura Scarico (B9)
+        address: 8
+        <<: *defaults_temperature_sensor
+  
+      - unique_id: pdc_templari_xx_B10_t_aspirazione
+        name: Templari XX Temperatura Aspirazione (B10)
+        address: 9
+        <<: *defaults_temperature_sensor
+  
+      - unique_id: pdc_templari_xx_B11_alta_pressione
+        name: Templari XX Alta Pressione (B11)
+        address: 10
+        <<: *defaults_pressure_sensor
+  
+      - unique_id: pdc_templari_xx_B12_bassa_pressione
+        name: Templari XX Bassa Pressione (B12)
+        address: 11
+        <<: *defaults_pressure_sensor
+  
+      - unique_id: pdc_templari_xx_t_scarico_gas
+        name: Templari XX Temperatura Scarico Gas
+        address: 12
+        <<: *defaults_temperature_sensor
+  
+      - unique_id: pdc_templari_xx_t_superheating
+        name: Templari XX Temperatura Superheating
+        address: 13
+        <<: *defaults_temperature_sensor
+  
+      - unique_id: pdc_templari_xx_t_superheating_valvola_a
+        name: Templari XX Temperatura Superheating Valvola di Espansione
+        address: 14
+        <<: *defaults_temperature_sensor
+  
+      - unique_id: pdc_templari_xx_apertura_valvola_a
+        name: Templari XX Percentuale Apertura Valvola di Espansione
+        address: 15
+        <<: *defaults_percentage_sensor
+  
+      - unique_id: pdc_templari_xx_giri_compressore
+        name: Templari XX Giri Compressore
+        address: 16
+        <<: *defaults_rps_sensor
+  
+      - unique_id: pdc_templari_xx_percentuale_compressore
+        name: Templari XX Percentuale Compressore
+        address: 17
+        <<: *defaults_percentage_sensor
+  
+      - unique_id: pdc_templari_xx_p_compressore
+        name: Templari XX Potenza Compressore
+        address: 18
+        <<: *defaults_smallpower_sensor
+        scale: 10
+  
+      - unique_id: pdc_templari_xx_p_ventola
+        name: Templari XX Potenza Ventola
+        address: 19
+        <<: *defaults_smallpower_sensor
+  
+  #    - unique_id: pdc_templari_xx_p_ventola_2
+  #      name: Templari XX Potenza Ventola 2
+  #      address: 20
+  #      <<: *defaults_smallpower_sensor
+  
+      - unique_id: pdc_templari_xx_COP
+        name: Templari XX COP
+        address: 21
+        <<: *defaults_sensor
+        state_class: measurement # necessario altrimenti viene come sequenza di stati
+  
+      - unique_id: pdc_templari_xx_p_assorbita_totale
+        name: Templari XX Potenza Assorbita Totale
+        address: 22
+        <<: *defaults_smallpower_sensor
+  
+      - unique_id: pdc_templari_xx_p_input
+        name: Templari XX Potenza di Input Elettrica
+        address: 23
+        <<: *defaults_smallpower_sensor
+  
+      - unique_id: pdc_templari_xx_p_output
+        name: Templari XX Potenza di Output Termica
+        address: 24
+        <<: *defaults_bigpower_sensor
+        scale: 0.1
+  
+      - unique_id: pdc_templari_xx_countdown
+        name: Templari XX Conto alla rovescia per nuova partenza
+        address: 25
+        <<: *defaults_countdown_sensor
+  
+      - unique_id: pdc_templari_xx_stato_defrost
+        name: Templari XX Stato Defrost
+        address: 26
+        <<: *defaults_number_sensor
+  
+      - unique_id: pdc_templari_xx_numero_defrost
+        name: Templari XX Numero Defrost fatti
+        address: 27
+        <<: *defaults_number_sensor
+  
+      - unique_id: pdc_templari_xx_velocita_rotore
+        name: Templari XX Velocità Rotore
+        address: 29
+        <<: *defaults_frequency_sensor
+  
+      - unique_id: pdc_templari_xx_status_inverter
+        name: Templari XX Stato Inverter
+        address: 30
+        <<: *defaults_number_sensor
+  
+      - unique_id: pdc_templari_xx_errore_inverter
+        name: Templari XX Errore Inverter
+        address: 31
+        <<: *defaults_number_sensor
+  
+      - unique_id: pdc_templari_xx_t_inverter
+        name: Templari XX Temperatura Inverter
+        address: 32
+        <<: *defaults_temperature_sensor
+        scale: 1
+  
+      - unique_id: pdc_templari_xx_stato_macchina
+        name: Templari XX Stato Macchina
+        address: 79
+        <<: *defaults_number_sensor
+  
+      - unique_id: pdc_templari_xx_modalita_funzionamento
+        name: Templari XX Modalità Funzionamento
+        address: 80
+        <<: *defaults_number_sensor
+  
+  #    - unique_id: pdc_templari_xx_giri_primario_supervisore
+  #      name: Templari XX Giri Primario richiesti da Supervisore
+  #      address: 81
+  #      <<: *defaults_rps_sensor
+  #      scale: 10
+  
+  #    - unique_id: pdc_templari_xx_giri_acs_supervisore
+  #      name: Templari XX Giri ACS richiesti da Supervisore
+  #      address: 82
+  #      <<: *defaults_rps_sensor
+  #      scale: 10
+  
+      # da me questo registro ha un valore fisso senza senso quello reale è quello "da supervisore"
+      - unique_id: pdc_templari_xx_setpoint_chiller
+        name: Templari XX Temperatura Setpoint Chiller
+        address: 93
+        <<: *defaults_temperature_sensor
+  
+      # da me questo registro ha un valore fisso senza senso quello reale è quello "da supervisore"
+      - unique_id: pdc_templari_xx_setpoint_heat_pump
+        name: Templari XX Temperatura Setpoint Heat Pump
+        address: 94
+        <<: *defaults_temperature_sensor
+  
+      # da me questo registro ha un valore fisso senza senso quello reale è quello "da supervisore"
+      - unique_id: pdc_templari_xx_setpoint_acs
+        name: Templari XX Temperatura Setpoint ACS
+        address: 95
+        <<: *defaults_temperature_sensor
+  
+      - unique_id: pdc_templari_xx_setpoint_chiller_supervisore
+        name: Templari XX Temperatura Setpoint Chiller richiesti da Supervisore
+        address: 96
+        <<: *defaults_temperature_sensor
+  
+      - unique_id: pdc_templari_xx_setpoint_heat_pump_supervisore
+        name: Templari XX Temperatura Setpoint Heat Pump richiesti da Supervisore
+        address: 97
+        <<: *defaults_temperature_sensor
+  
+      - unique_id: pdc_templari_xx_setpoint_acs_supervisore
+        name: Templari XX Temperatura Setpoint ACS richiesti da Supervisore
+        address: 98
+        <<: *defaults_temperature_sensor
+  
+      - unique_id: pdc_templari_xx_setpoint_active
+        name: Templari XX Temperatura Setpoint Active
+        address: 99
+        <<: *defaults_temperature_sensor
+  
+# integrale di riemann della potenza assorbita per rilevare l'energia
+sensor:
+  - platform: integration
+    name: templari_xx_consumo_riemann_total
+    unique_id: templari_xx_consumo_riemann_total
+    source: sensor.templari_xx_potenza_assorbita_totale
+    unit_prefix: k
+    method: left
+
+# contatori utility_meter
+utility_meter:
+  templari_xx_consumo_riemann_daily:
+    unique_id: templari_xx_consumo_riemann_daily
+    name: "templari_xx_consumo_riemann_daily"
+    source: sensor.templari_xx_consumo_riemann_total
+    cycle: daily
+  templari_xx_consumo_riemann_weekly:
+    unique_id: templari_xx_consumo_riemann_weekly
+    name: "templari_xx_consumo_riemann_weekly"
+    source: sensor.templari_xx_consumo_riemann_total
+    cycle: weekly
+  templari_xx_consumo_riemann_monthly:
+    unique_id: templari_xx_consumo_riemann_monthly
+    name: "templari_xx_consumo_riemann_monthly"
+    source: sensor.templari_xx_consumo_riemann_total
+    cycle: monthly
+  templari_xx_consumo_riemann_yearly:
+    unique_id: templari_xx_consumo_riemann_yearly
+    name: "templari_xx_consumo_riemann_yearly"
+    source: sensor.templari_xx_consumo_riemann_total
+    cycle: yearly
+
+# template decodifica stati
+template:
+  - sensor:
+
+    - name: templari_xx_stato_macchina_decodificato
+      unique_id: templari_xx_stato_macchina_decodificato
+      icon: mdi:heat-pump
+      state: >-
+        {{ 
+          {
+          "0": "Spenta", 
+          "1": "Accesa", 
+          "2": "Risparmio Energia", 
+          "3": "Auto"
+          }.get(states('sensor.templari_xx_stato_macchina'), "Sconosciuto")
+        }}
+      availability: "{{ (states('sensor.templari_xx_stato_macchina')|is_number) }}"
+
+    - name: templari_xx_modalita_funzionamento_decodificato
+      unique_id: templari_xx_modalita_funzionamento_decodificato
+      icon: mdi:cog-box
+      state: >-
+        {{ 
+          {
+          "0": "solo ACS", 
+          "1": "riscaldamento e ACS", 
+          "2": "raffrescamento e ACS",
+          "3": "solo riscaldamento",
+          "4": "solo raffrescamento"
+          }.get(states('sensor.templari_xx_modalita_funzionamento'), "Sconosciuto")
+        }}
+      availability: "{{ (states('sensor.templari_xx_modalita_funzionamento')|is_number) }}"
+
+    - name: templari_xx_stato_inverter_decodificato
+      unique_id: templari_xx_stato_inverter_decodificato
+      icon: mdi:heat-pump-outline
+      state: >-
+        {{ 
+          {
+          "0": "Spento", 
+          "1": "Acceso", 
+          "2": "In Allarme"
+          }.get(states('sensor.templari_xx_stato_inverter'), "Sconosciuto")
+        }}
+      availability: "{{ (states('sensor.templari_xx_stato_inverter')|is_number) }}"
+
+    - name: templari_xx_errore_inverter_decodificato
+      unique_id: templari_xx_errore_inverter_decodificato
+      icon: mdi:alert-circle
+      state: >-
+        {{ 
+          {
+          "0": "Nessuno",
+          "1": "sovracorrente", 
+          "2": "sovraccarico motore", 
+          "3": "sovratensione", 
+          "4": "sottotensione", 
+          "5": "temperatura elevata", 
+          "6": "temperatura bassa",
+          "7": "sovracorrente hardware", 
+          "8": "temperatura elevata motore", 
+          "9": "riservato", 
+          "10": "CPU", 
+          "11": "parametro default", 
+          "12": "corrente continua perturbata", 
+          "13": "timeout comunicazione seriale", 
+          "14": "termistore", 
+          "15": "autotuning", 
+          "16": "disabilitato", 
+          "17": "fase motore assente", 
+          "18": "ventola", 
+          "19": "stallo motore"
+          }.get(states('sensor.templari_xx_errore_inverter'), "Sconosciuto") 
+        }}
+      availability: "{{ (states('sensor.templari_xx_errore_inverter')|is_number) }}"
+
+    # questo sensore che unifica i bit attivi puà essere utile ma ha un problema:
+    # se supera i 255 caratteri da valore sconosciuto... non ho trovato ancora una
+    # soluzione se ce l'avete fatemi sapere...
+    - name: templari_xx_bit_attivi
+      unique_id: templari_xx_bit_attivi
+      state: >-
+        {{ expand(integration_entities('modbus')
+          | select('search', '^binary_sensor.templari_xx_bit')
+          | select('is_state', 'on')
+          | reverse)
+        | selectattr('name', 'search', '^(?!.*Undocumented).*')
+        | map(attribute='name') 
+        | join(' | ') }}
+          

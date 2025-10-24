@@ -1,0 +1,522 @@
+# Script per rinominare le entità bit modbus Templari
+# versione 1.0 by Daniele "Wergio" Vergini
+#
+# creare un nuovo script da interfaccia, entrare in modalità yaml e incollare
+# poi basta lanciare questo script una volta sola dopo aver attivato i sensori modbus
+
+alias: Rinomina entità bit Modbus Templari
+description: >
+  Script da eseguire una tantum che automatizza la rinomina, secondo
+  documentazione Templari "SVK V13-ENG.pdf", dei binary_sensors generati dai
+  discrete input modbus. 
+
+  Prima di lanciare questo script è necessario:
+
+  1) aver installato tramite HACS il componente aggiuntivo Spook che permette la
+  rinomina di entità, vedi https://spook.boo 
+
+  2) aver inserito nella configurazione modbus la lettura di registri binari in
+  modo sequenziale (già presente di default nel file templari_package.yaml)
+fields:
+  entity_name:
+    name: Nome Entità
+    required: true
+    example: pdc_templari
+    description: >-
+      Metti nella casella l'id delle entità bit, ad esempio: "templari_xx_bit"
+      (occhio è id entità, che viene dedotto dal "name", non è l'"unique_id").
+      Nota bene: prima di eseguire lo script devi aver già generato le entità
+      modbus con l'apposita configurazione modbus con virtual_count, dovresti
+      avere una serie di 120 entità con nome uguale e contatore numerico
+      progressivo
+    selector:
+      text: 
+sequence:
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}
+      name: "Bit 1 - Digital input 1: remote chiller/heat pump"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_1
+      name: "Bit 2 - Digital input 2: compressor overload"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}
+      name: "Bit 1 - Digital input 1: remote chiller/heat pump"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_1
+      name: "Bit 2 - Digital input 2: compressor overload"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_2
+      name: "Bit 3 - Digital input 3: compressor high pressure"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_3
+      name: "Bit 4 - Digital input 4: pump overload"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_4
+      name: "Bit 5 - Digital input 5: disable plant"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_5
+      name: "Bit 6 - Digital input 6: heater/boiler overload"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_6
+      name: "Bit 7 - Digital input 7: boiler overload"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_7
+      name: "Bit 8 - Digital input 8: remote on/off"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_8
+      name: "Bit 9 - Digital input 9: MODBUS / Plan protocoll"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_9
+      name: "Bit 10 - Digital input 10: primary flow switch"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_10
+      name: "Bit 11 - Digital output 1: compressor working"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_11
+      name: "Bit 12 - Digital output 2: defrost running"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_12
+      name: "Bit 13 - Digital output 3: undocumented"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_13
+      name: "Bit 14 - Digital output 4: primary circulator running"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_14
+      name: "Bit 15 - Digital output 5: condencer heater running"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_15
+      name: "Bit 16 - Digital output 6: boiler system running"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_16
+      name: "Bit 17 - Digital output 7: general alarm"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_17
+      name: "Bit 18 - Digital output 8: hot water heater running"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_18
+      name: "Bit 19 - Digital output 9: sanitary hot water valve"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_19
+      name: "Bit 20 - Digital output 10: 4 way valve"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_20
+      name: "Bit 21 - Digital output 11: crank heater running"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_21
+      name: Bit 22 - Digital output 12; undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_22
+      name: Bit 23 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_23
+      name: "Bit 24 - Undocumented"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_24
+      name: "Bit 25 - Undocumented"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_25
+      name: "Bit 26 - Undocumented"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_26
+      name: "Bit 27 - Undocumented"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_27
+      name: "Bit 28 - Undocumented"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_28
+      name: "Bit 29 - Undocumented"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_29
+      name: "Bit 30 - Probe Alarm: General Inverter Alarm"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_30
+      name: "Bit 31 - Probe Alarm: Low pressure difference alarm"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_31
+      name: "Bit 32 - Probe Alarm: probe broken (analogic input B1)"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_32
+      name: "Bit 33 - Probe Alarm: probe broken (analogic input B2)"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_33
+      name: "Bit 34 - Probe Alarm: probe broken (analogic input B3)"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_34
+      name: "Bit 35 - Probe Alarm: probe broken (analogic input B4)"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_35
+      name: "Bit 36 - Probe Alarm: probe broken (analogic input B5)"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_36
+      name: "Bit 37 - Probe Alarm: probe broken (analogic input B6)"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_37
+      name: "Bit 38 - Probe Alarm: probe broken (analogic input B7)"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_38
+      name: "Bit 39 - Probe Alarm: probe broken (analogic input B8)"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_39
+      name: "Bit 40 - Probe Alarm: probe broken (analogic input B9)"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_40
+      name: "Bit 41 - Probe Alarm: probe broken (analogic input B10)"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_41
+      name: "Bit 42 - Probe Alarm: probe broken (analogic input B11)"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_42
+      name: "Bit 43 - Probe Alarm: probe broken (analogic input B12)"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_43
+      name: "Bit 44 - Probe Alarm: Allarme Flussostato"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_44
+      name: Bit 45 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_45
+      name: Bit 46 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_46
+      name: Bit 47 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_47
+      name: "Bit 48 - Probe Alarm: Temperature integration alarm memory ALR01"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_48
+      name: "Bit 49 - Probe Alarm: high pressure by pressure switch"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_49
+      name: "Bit 50 - Probe Alarm: primary circuit antifreeze alarm"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_50
+      name: "Bit 51 - Probe Alarm: Overheat alarm primary circuit"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_51
+      name: Bit 52 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_52
+      name: Bit 53 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_53
+      name: "Bit 54 - Probe Alarm: Alarm by flow switch primary circuit"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_54
+      name: Bit 55 - Probe Alarm: Alarm discharge probe broken necessary only with SIAM compressor
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_55
+      name: "Bit 56 - Probe Alarm: Fan Overload"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_56
+      name: Bit 57 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_57
+      name: "Bit 58 - Probe Alarm: Low pressure by transducer"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_58
+      name: "Bit 59 - Probe Alarm: Temperature integration alarm status ALR01"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_59
+      name: "Bit 60 - Probe Alarm: Overtemperature status DHW"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_60
+      name: "Bit 61 - Probe Alarm: Pumps unit/plant overload"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_61
+      name: Bit 62 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_62
+      name: Bit 63 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_63
+      name: "Bit 64 - Probe Alarm: Discharge temperature alarm"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_64
+      name: Bit 65 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_65
+      name: Bit 66 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_66
+      name: Bit 67 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_67
+      name: Bit 68 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_68
+      name: Bit 69 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_69
+      name: Bit 70 - Supervisor Offline (heart bit fails)
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_70
+      name: Bit 71 - Inverter offline alarm
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_71
+      name: Bit 72 - Inverter - Electronic bioard offline alarm
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_72
+      name: Bit 73 - split modbus offline
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_73
+      name: Bit 74 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_74
+      name: Bit 75 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_75
+      name: Bit 76 - compressor 1 Overload
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_76
+      name: Bit 77 - compressor 2 overload
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_77
+      name: Bit 78 - compressor envelop alarm
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_78
+      name: Bit 79 - compressor forced off working out of envelope
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_79
+      name: Bit 80 - compressor startup failure alarm:reach max retry number
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_80
+      name: Bit 81 - compressor startup failure alarm used for the alarm mask visualization
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_81
+      name: Bit 82 - compressor envelop alarm. Compressor working out of envelop area
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_82
+      name: Bit 83 - compressor start fail
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_83
+      name: Bit 84 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_84
+      name: Bit 85 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_85
+      name: Bit 86 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_86
+      name: Bit 87 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_87
+      name: Bit 88 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_88
+      name: Bit 89 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_89
+      name: "Bit 90 - Warning: By-pass equalization solenoid valve enable"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_90
+      name: "Bit 91 - Warning: Defrost is running"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_91
+      name: "Bit 92 - Warning: Delta P > allowable to start up"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_92
+      name: "Bit 93 - Warning: flow switch has caused alarm even if it has been reset"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_93
+      name: "Bit 94 - Warning: compressor off due to oil heating"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_94
+      name: "Bit 95 - Warning: high temperature protection for exhaust gas active"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_95
+      name: "Bit 96 - Warning: periodic control for compressor speed variation for high temperature exhaust gas protection"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_96
+      name: "Bit 97 - Warning: vapor injection valve"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_97
+      name: "Bit 98 - Warning: high pressure transducer"
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_98
+      name: Bit 99 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_99
+      name: Bit 100 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_100
+      name: Bit 101 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_101
+      name: Bit 102 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_102
+      name: Bit 103 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_103
+      name: Bit 104 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_104
+      name: Bit 105 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_105
+      name: Bit 106 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_106
+      name: Bit 107 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_107
+      name: Bit 108 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_108
+      name: Bit 109 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_109
+      name: Bit 110 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_110
+      name: Bit 111 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_111
+      name: Bit 112 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_112
+      name: Bit 113 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_113
+      name: Bit 114 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_114
+      name: Bit 115 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_115
+      name: Bit 116 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_116
+      name: Bit 117 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_117
+      name: Bit 118 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_118
+      name: Bit 119 - Undocumented
+  - action: homeassistant.rename_entity
+    data:
+      entity_id: binary_sensor.{{ entity_name }}_119
+      name: Bit 120 - Undocumented
