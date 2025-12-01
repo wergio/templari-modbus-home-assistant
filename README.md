@@ -16,3 +16,5 @@ NOTA BENE: questi file sono calibrati per la versione software 1.8.55 del pannel
 # Risultato finale
 Questo è un esempio di plancia che vi troverete alla fine, ovviamente potete modificarla come meglio credete per aggiungere o togliere roba
 <img width="2606" height="1971" alt="esempio-plancia" src="https://github.com/user-attachments/assets/5f940fe9-921d-42d5-9152-fd3552276f15" />
+
+PS: sto sviluppando anche uno "sniffer" per recuperare alcune informazioni che l'interfaccia modbus ufficiale attualmente non permette di ottenere, come le temperature rilevate dai sensori room, trovate maggiori info qui: https://github.com/wergio/addon-templari-modbus-sniffer/
