@@ -259,7 +259,7 @@ sequence:
   - action: homeassistant.rename_entity
     data:
       entity_id: binary_sensor.{{ entity_name }}_54
-      name: Bit 55 - Probe Alarm: Alarm discharge probe broken necessary only with SIAM compressor
+      name: "Bit 55 - Probe Alarm: Alarm discharge probe broken necessary only with SIAM compressor"
   - action: homeassistant.rename_entity
     data:
       entity_id: binary_sensor.{{ entity_name }}_55
