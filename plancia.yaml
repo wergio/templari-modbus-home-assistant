@@ -101,12 +101,42 @@ views:
                   endif %}
               - entity: sensor.templari_xx_potenza_assorbita_totale
                 name: Potenza istantanea consumata
-              - entity: sensor.templari_xx_consumo_riemann_daily
+              - type: custom:template-entity-row
+                entity: sensor.templari_xx_consumo_riemann_daily
                 name: Consumo Giornaliero
-              - entity: sensor.templari_xx_consumo_riemann_monthly
+                state: "{{ states('sensor.templari_xx_consumo_riemann_daily') | round(2) }} kWh"
+                secondary: >-
+                  Termico: {{ states('sensor.templari_xx_output_termico_riemann_daily') |
+                  round(2) }} kWh
+                tap_action: |
+                  {
+                    "action": "navigate",
+                    "navigation_path": "/history?entity_id=sensor.templari_xx_output_termico_riemann_daily%2Csensor.templari_xx_consumo_riemann_daily&start_date={{ (now() - timedelta(days=1)).strftime('%Y-%m-%d') }}&end_date={{ (now() + timedelta(days=1)).strftime('%Y-%m-%d') }}",
+                  }
+              - type: custom:template-entity-row
+                entity: sensor.templari_xx_consumo_riemann_monthly
                 name: Consumo Mensile
-              - entity: sensor.templari_xx_consumo_riemann_yearly
+                state: "{{ states('sensor.templari_xx_consumo_riemann_monthly') | round(2) }} kWh"
+                secondary: >-
+                  Termico: {{ states('sensor.templari_xx_output_termico_riemann_monthly') |
+                  round(2) }} kWh
+                tap_action: |
+                  {
+                    "action": "navigate",
+                    "navigation_path": "/history?entity_id=sensor.templari_xx_output_termico_riemann_monthly%2Csensor.templari_xx_consumo_riemann_monthly&start_date={{ "{:04d}-{:02d}-01".format(now().year if now().month>1 else now().year-1, now().month-1 if now().month>1 else 12) }}&end_date={{ (now() + timedelta(days=1)).strftime('%Y-%m-%d') }}",
+                  }      
+              - type: custom:template-entity-row
+                entity: sensor.templari_xx_consumo_riemann_yearly
                 name: Consumo Annuale
+                state: "{{ states('sensor.templari_xx_consumo_riemann_yearly') | round(2) }} kWh"
+                secondary: >-
+                  Termico: {{ states('sensor.templari_xx_output_termico_riemann_yearly') |
+                  round(2) }} kWh
+                tap_action: |
+                  {
+                    "action": "navigate",
+                    "navigation_path": "/history?entity_id=sensor.templari_xx_output_termico_riemann_yearly%2Csensor.templari_xx_consumo_riemann_yearly&start_date={{ "{:04d}-{:02d}-01".format(now().year-1, now().month) }}&end_date={{ (now() + timedelta(days=1)).strftime('%Y-%m-%d') }}",
+                  } 
       - type: grid
         cards:
           - type: entities

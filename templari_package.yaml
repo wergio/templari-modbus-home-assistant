@@ -341,6 +341,13 @@ sensor:
     unit_prefix: k
     method: left
 
+# e della potenza termica
+  - platform: integration
+    name: templari_xx_output_termico_riemann_total
+    unique_id: templari_xx_output_termico_riemann_total
+    source: sensor.templari_xx_potenza_di_output_termica
+    method: left
+
 # contatori utility_meter
 utility_meter:
   templari_xx_consumo_riemann_daily:
@@ -362,6 +369,27 @@ utility_meter:
     unique_id: templari_xx_consumo_riemann_yearly
     name: "templari_xx_consumo_riemann_yearly"
     source: sensor.templari_xx_consumo_riemann_total
+    cycle: yearly
+
+  templari_xx_output_termico_riemann_daily:
+    unique_id: templari_xx_output_termico_riemann_daily
+    name: "templari_xx_output_termico_riemann_daily"
+    source: sensor.templari_xx_output_termico_riemann_total
+    cycle: daily
+  templari_xx_output_termico_riemann_weekly:
+    unique_id: templari_xx_output_termico_riemann_weekly
+    name: "templari_xx_output_termico_riemann_weekly"
+    source: sensor.templari_xx_output_termico_riemann_total
+    cycle: weekly
+  templari_xx_output_termico_riemann_monthly:
+    unique_id: templari_xx_output_termico_riemann_monthly
+    name: "templari_xx_output_termico_riemann_monthly"
+    source: sensor.templari_xx_output_termico_riemann_total
+    cycle: monthly
+  templari_xx_output_termico_riemann_yearly:
+    unique_id: templari_xx_output_termico_riemann_yearly
+    name: "templari_xx_output_termico_riemann_yearly"
+    source: sensor.templari_xx_output_termico_riemann_total
     cycle: yearly
 
 # template decodifica stati
