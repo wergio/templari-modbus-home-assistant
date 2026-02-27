@@ -42,6 +42,7 @@ modbus:
       data_type: int16
       scale: 0.1
       precision: 1
+      state_class: measurement
   
     defaults_temperature_sensor: &defaults_temperature_sensor
       <<: *defaults_sensor
@@ -218,7 +219,6 @@ modbus:
         name: Templari XX COP
         address: 21
         <<: *defaults_sensor
-        state_class: measurement # necessario altrimenti viene come sequenza di stati
   
       - unique_id: pdc_templari_xx_p_assorbita_totale
         name: Templari XX Potenza Assorbita Totale
